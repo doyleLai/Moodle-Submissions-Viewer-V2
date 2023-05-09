@@ -2,6 +2,12 @@ import sys
 import json
 from os import listdir
 from os.path import join, isdir
+import re
+
+def natural_sort(l): 
+    convert = lambda text: int(text) if text.isdigit() else text.lower()
+    alphanum_key = lambda key: [convert(c) for c in re.split('([0-9]+)', key)]
+    return sorted(l, key=alphanum_key)
 
 htmltemplate = r"""
 <!DOCTYPE html>
@@ -156,7 +162,7 @@ def main(folder_path:str):
         "submissions": []
     }
 
-    dirs = [f for f in listdir(folder_path) if isdir(join(folder_path, f))]
+    dirs = [f for f in natural_sort(listdir(folder_path)) if isdir(join(folder_path, f))]
     for dir in dirs:
         data["submissions"].append(
             {
